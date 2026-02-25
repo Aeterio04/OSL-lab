@@ -23,6 +23,8 @@ public:
         cout << "Number of processes: ";
         cin >> numproc;
         temp = new process[numproc];
+        
+        
         for (int i = 0; i < numproc; i++) {
             cout << "Memory required for process " << i + 1 << ": ";
             cin >> temp[i].memory_req;
@@ -30,6 +32,7 @@ public:
 
         cout << "Number of fragments (Total 1000MB): ";
         cin >> numfrag;
+        
         frag = new fragment[numfrag];
 
         while (true) {
@@ -37,35 +40,40 @@ public:
             for (int i = 0; i < numfrag; i++) {
                 cout << "Enter memory for block " << i + 1 << ": ";
                 cin >> frag[i].total_mem;
+             
                 sum += frag[i].total_mem;
-            }
+             }
             if (sum <= 1000) break;
             cout << "Sum exceeds 1000MB. Try again.\n";
         }
     }
 
     void next_Fit() {
-        int j = 0; // The 'j' persists across process iterations
+        int j = 0;
         int allocated_count = 0;
 
         for (int i = 0; i < numproc; i++) {
-            int start_point = j; // Remember where we started for this process
+        
+        
+            int start_point = j;
             bool found = false;
 
-            // Loop through fragments starting from where we left off
             do {
-                if (frag[j].proc == NULL && temp[i].memory_req <= frag[j].total_mem) {
-                    frag[j].proc = &temp[i];
+        
+        
+            if (frag[j].proc == NULL && temp[i].memory_req <= frag[j].total_mem) {
+    
+                frag[j].proc = &temp[i];
                     temp[i].isAllocated = true;
+    
                     cout << "Process " << i + 1 << " allocated to fragment " << j + 1 << endl;
                     
-                    // Move j to the next starting position
                     j = (j + 1) % numfrag; 
                     allocated_count++;
                     found = true;
                     break;
                 }
-                j = (j + 1) % numfrag; // Wrap around
+                j = (j + 1) % numfrag;
             } while (j != start_point);
 
             if (!found) {
